@@ -10,3 +10,7 @@ goto bower directory and install :
 bower install angularjs --save
 bower install socket.io-client --save
 bower install angular-socket-io --save
+
+
+then launch :
+node test.js
