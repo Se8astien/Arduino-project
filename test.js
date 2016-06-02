@@ -23,11 +23,23 @@ var board = new five.Board();
 board.on("ready", function() {
     console.log('Arduino connected');
     led = new five.Led(13);
+    var temperature = new five.Thermometer({
+      controller: "TMP36",
+      pin: "A0"
+    });
+
+    temperature.on("change", function() {
+      console.log(this.celsius + "°C", this.fahrenheit + "°F");
+    });
+});
+
+five.Board().on("ready", function() {
+
 });
 
 //Socket connection handler
 io.on('connection', function (socket) {
-        console.log(socket.id);
+        console.log('socket id : '+socket.id);
 
         socket.on('led:on', function (data) {
            led.on();
@@ -39,6 +51,11 @@ io.on('connection', function (socket) {
             console.log('LED OFF RECEIVED');
 
         });
-    });
+
+});
+
+
+
+
 
 console.log('Waiting for connection');
