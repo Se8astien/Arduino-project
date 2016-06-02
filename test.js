@@ -33,10 +33,6 @@ board.on("ready", function() {
     });
 });
 
-five.Board().on("ready", function() {
-
-});
-
 //Socket connection handler
 io.on('connection', function (socket) {
         console.log('socket id : '+socket.id);
