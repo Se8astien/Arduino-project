@@ -14,14 +14,19 @@
   <div ng-controller="ArduController">
     <button ng-click="ledOn()">On</button>
     <button ng-click="ledOff()">Off</button>
+    <span>Température dans la maison : {{temp}} °C </span>
   </div>
 
+
+
 <script type="text/javascript">
-    var app = angular.module('myApp', ['btford.socket-io']).
-    factory('mySocket', function (socketFactory) {
+    var app = angular.module('myApp', ['btford.socket-io']);
+
+    app.factory('mySocket', function (socketFactory) {
         return socketFactory();
-    }).
-    controller('ArduController', function ($scope,mySocket) {
+    });
+
+    app.controller('ArduController', function ($scope,mySocket) {
 
         $scope.ledOn = function () {
 
@@ -35,6 +40,12 @@
             mySocket.emit('led:off');
             console.log('LED OFF');
         };
+
+        mySocket.on('temperature', function (data) {
+          console.log(data.some);
+          $scope.temp = data.some;
+    });
+
 });
 
 </script>
