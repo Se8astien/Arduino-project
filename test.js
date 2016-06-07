@@ -78,6 +78,8 @@ board.on("ready", function() {
       // if temp change then send data
       if(this.celsius != oldtemp){
         console.log(this.celsius + "°C", this.fahrenheit + "°F");
+        // add connected value
+        //trouble if arduino is not connected
         if(connected) socket.emit('tempSensor', { some: this.celsius });
       }
       oldtemp = this.celsius;
