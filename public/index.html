@@ -14,7 +14,12 @@
   <div ng-controller="ArduController">
     <button ng-click="ledOn()">On</button>
     <button ng-click="ledOff()">Off</button>
+
     <span>Température dans la maison : {{temp}} °C </span>
+
+    <button ng-click="max90()">90°</button>
+    <button ng-click="center()">Centre</button>
+    <button ng-click="min90()">-90°</button>
   </div>
 
 
@@ -36,12 +41,26 @@
 
 
         $scope.ledOff = function () {
-
             mySocket.emit('led:off');
             console.log('LED OFF');
         };
 
-        mySocket.on('temperature', function (data) {
+        // servo to 90°
+        $scope.max90 = function () {
+            mySocket.emit('servo:max90');
+            console.log('servo 90°');
+        };
+        // servo max 180
+        $scope.min90 = function () {
+            mySocket.emit('servo:min90');
+            console.log('servo min 90');
+        };
+        $scope.center = function () {
+            mySocket.emit('servo:center');
+            console.log('servo center');
+        };
+
+        mySocket.on('tempSensor', function (data) {
           console.log(data.some);
           $scope.temp = data.some;
     });
