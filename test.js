@@ -36,11 +36,15 @@ io.on('connection', function (s) {
         socket.on('led:on', function (data) {
            led.on();
            console.log('LED ON RECEIVED');
+           socket.broadcast.emit('ledState', { state: "Led ON "});
+           socket.emit('ledState', { state: "Led ON "});
         });
 
         socket.on('led:off', function (data) {
             led.off();
             console.log('LED OFF RECEIVED');
+            socket.broadcast.emit('ledState', { state: "Led OFF "});
+            socket.emit('ledState', { state: "Led OFF "});
         });
 
         // control servo
@@ -80,7 +84,10 @@ board.on("ready", function() {
         console.log(this.celsius + "°C", this.fahrenheit + "°F");
         // add connected value
         //trouble if arduino is not connected
-        if(connected) socket.emit('tempSensor', { some: this.celsius });
+        if(connected) {
+          socket.emit('tempSensor', { some: this.celsius });
+          socket.broadcast.emit('tempSensor', { some: this.celsius });
+        }
       }
       oldtemp = this.celsius;
     });

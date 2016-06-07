@@ -12,11 +12,12 @@
 
     <h1>{{"Led controller"}}</h1>
   <div ng-controller="ArduController">
+    <h2>{{LEDState}}</h2>
     <button ng-click="ledOn()">On</button>
     <button ng-click="ledOff()">Off</button>
-
+    </br>
     <span>Température dans la maison : {{temp}} °C </span>
-
+    </br>
     <button ng-click="max90()">90°</button>
     <button ng-click="center()">Centre</button>
     <button ng-click="min90()">-90°</button>
@@ -63,7 +64,12 @@
         mySocket.on('tempSensor', function (data) {
           console.log(data.some);
           $scope.temp = data.some;
-    });
+        });
+
+        mySocket.on('ledState', function (data) {
+          console.log(data.state);
+          $scope.LEDState = data.state;
+        });
 
 });
 
