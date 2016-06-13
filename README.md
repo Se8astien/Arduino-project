@@ -14,6 +14,7 @@ npm install johnny-five raspi-io
 npm install express
 npm install socket.io
 npm install bower
+sudo npm install serialport
 
 goto bower directory and install :
 
@@ -24,3 +25,6 @@ bower install angular-socket-io --save
 
 then launch :
 node test.js
+
+???
+http://k33g.github.io/2015/10/04/ARDUINO-RPI.html
