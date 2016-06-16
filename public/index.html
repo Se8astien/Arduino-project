@@ -48,17 +48,17 @@
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-socket-io/socket.js"></script>
 
-    <h1>{{"Led controller"}}</h1>
+    <h1 class="text-center">{{"Led controller"}}</h1>
   <div ng-controller="ArduController">
     <h2>{{LEDState}}</h2>
-    <button ng-click="ledOn()">On</button>
-    <button ng-click="ledOff()">Off</button>
+    <button class="btn btn-info start" ng-click="ledOn()">On</button>
+    <button class="btn btn-info start" ng-click="ledOff()">Off</button>
     </br>
     <span>Température dans la maison : {{temp}} °C </span>
     </br>
-    <button ng-click="max90()">90°</button>
-    <button ng-click="center()">Centre</button>
-    <button ng-click="min90()">-90°</button>
+    <button class="btn btn-info start" ng-click="max90()">90°</button>
+    <button class="btn btn-info start" ng-click="center()">Centre</button>
+    <button class="btn btn-info start" ng-click="min90()">-90°</button>
   </div>
 
   <h1 class="text-center">Home

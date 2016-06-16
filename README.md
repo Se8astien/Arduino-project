@@ -26,5 +26,7 @@ bower install angular-socket-io --save
 then launch :
 node test.js
 
-???
+
+#Aide
+http://thejackalofjavascript.com/rpi-live-streaming/
 http://k33g.github.io/2015/10/04/ARDUINO-RPI.html

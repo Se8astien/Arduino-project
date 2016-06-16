@@ -4,6 +4,12 @@ var app            = express();
 var httpServer = require("http").createServer(app);
 var five = require("johnny-five");
 var io=require('socket.io')(httpServer);
+var fs = require('fs');
+var path = require('path');
+
+var spawn = require('child_process').spawn;
+var proc;
+var sockets = {};
 
 var port = 3000;
 
@@ -35,15 +41,32 @@ board.on("ready", function() {
       pin: "A0"
     });
 
-    servo      = new five.Servo({
-      startAt: 45,
-      pin :10,
-    });
+    // servo      = new five.Servo({
+    //   pin :10,
+    //   center: true,
+    // });
 
     //Socket connection handler
     io.on('connection', function (socket) {
-
+            sockets[socket.id] = socket;
             console.log('socket id : '+socket.id);
+            console.log("Total clients connected : ", Object.keys(sockets).length);
+
+
+            socket.on('disconnect', function() {
+                delete sockets[socket.id];
+
+                // no more sockets, kill the stream
+                if (Object.keys(sockets).length == 0) {
+                  app.set('watchingFile', false);
+                  if (proc) proc.kill();
+                  fs.unwatchFile('./public/image_stream.jpg');
+                }
+              });
+
+              socket.on('start-stream', function() {
+                startStreaming(io);
+              });
 
             tempSensor.on('data', function() {
               // if temp change then send data
@@ -72,21 +95,21 @@ board.on("ready", function() {
             });
 
             // control servo
-            socket.on('servo:max90', function (data) {
-                console.log('servo add 20');
-                servo.to(90, 2000, 10);
-                //servo.to(20);
-            });
-            socket.on('servo:min90', function (data) {
-                console.log('servo go to -90');
-              servo.to(-90, 2000, 10);
-                //servo.to(-20);
-            });
-            socket.on('servo:center', function (data) {
-                console.log('servo center');
-                servo.to(45, 2000, 10);
-                //servo.to(-20);
-            });
+            // socket.on('servo:max90', function (data) {
+            //     console.log('servo add 20');
+            //     servo.to(90, 2000, 10);
+            //     //servo.to(20);
+            // });
+            // socket.on('servo:min90', function (data) {
+            //     console.log('servo go to -90');
+            //   servo.to(-90, 2000, 10);
+            //     //servo.to(-20);
+            // });
+            // socket.on('servo:center', function (data) {
+            //     console.log('servo center');
+            //     servo.to(45, 2000, 10);
+            //     //servo.to(-20);
+            // });
 
 
     });
@@ -94,7 +117,33 @@ board.on("ready", function() {
 
 });
 
+function stopStreaming() {
+  if (Object.keys(sockets).length == 0) {
+    app.set('watchingFile', false);
+    if (proc) proc.kill();
+    fs.unwatchFile('./public/image_stream.jpg');
+  }
+}
 
+function startStreaming(io) {
+
+  if (app.get('watchingFile')) {
+    io.sockets.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+    return;
+  }
+
+  var args = ["-w", "640", "-h", "480", "-o", "./public/image_stream.jpg", "-t", "999999999", "-tl", "100"];
+  proc = spawn('raspistill', args);
+
+  console.log('Watching for changes...');
+
+  app.set('watchingFile', true);
+
+  fs.watchFile('./public/image_stream.jpg', function(current, previous) {
+    io.sockets.emit('liveStream', 'image_stream.jpg?_t=' + (Math.random() * 100000));
+  })
+
+}
 
 
 console.log('Waiting for connection');
