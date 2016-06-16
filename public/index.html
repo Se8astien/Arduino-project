@@ -3,12 +3,50 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>First arduino test :) </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arduino control :) </title>
+  <!-- Bootstrap CSS -->
+ <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+ <style type="text/css">
+   #stream {
+     height: 99%;
+     margin: 0px auto;
+     display: block;
+     margin-top: 20px;
+   }
+   </style>
+
+   <!-- jQuery -->
+   <script src="http://code.jquery.com/jquery.js"></script>
+   <!-- Bootstrap JavaScript -->
+   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+   <script src="/socket.io/socket.io.js"></script>
+
+   <!-- jQuery -->
+     <script src="http://code.jquery.com/jquery.js"></script>
+     <!-- Bootstrap JavaScript -->
+     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+     <script src="/socket.io/socket.io.js"></script>
+     <script>
+     var socket = io();
+     socket.on('liveStream', function(url) {
+       $('#stream').attr('src', url);
+       $('.start').hide();
+     });
+
+     function startStream() {
+       socket.emit('start-stream');
+       $('.start').hide();
+     }
+     </script>
+
+ </head>
+
 </head>
 <body>
-  <script src="bower/bin/bower_components/socket.io-client/socket.io.js"></script>
-  <script src="bower/bin/bower_components/angular/angular.js"></script>
-  <script src="bower/bin/bower_components/angular-socket-io/socket.js"></script>
+  <script src="bower_components/socket.io-client/socket.io.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-socket-io/socket.js"></script>
 
     <h1>{{"Led controller"}}</h1>
   <div ng-controller="ArduController">
@@ -23,6 +61,17 @@
     <button ng-click="min90()">-90°</button>
   </div>
 
+  <h1 class="text-center">Home
+      <small>Camera salon</small>
+    </h1>
+
+    <hr>
+
+    <button type="button" id="" class="btn btn-info start" onclick="startStream()">Start Camera</button>
+
+    <div class="row">
+      <img src="" id="stream">
+    </div>
 
 
 <script type="text/javascript">
@@ -47,19 +96,19 @@
         };
 
         // servo to 90°
-        $scope.max90 = function () {
-            mySocket.emit('servo:max90');
-            console.log('servo 90°');
-        };
-        // servo max 180
-        $scope.min90 = function () {
-            mySocket.emit('servo:min90');
-            console.log('servo min 90');
-        };
-        $scope.center = function () {
-            mySocket.emit('servo:center');
-            console.log('servo center');
-        };
+        // $scope.max90 = function () {
+        //     mySocket.emit('servo:max90');
+        //     console.log('servo 90°');
+        // };
+        // // servo max 180
+        // $scope.min90 = function () {
+        //     mySocket.emit('servo:min90');
+        //     console.log('servo min 90');
+        // };
+        // $scope.center = function () {
+        //     mySocket.emit('servo:center');
+        //     console.log('servo center');
+        // };
 
         mySocket.on('tempSensor', function (data) {
           console.log(data.some);
